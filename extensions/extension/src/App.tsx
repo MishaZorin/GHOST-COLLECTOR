@@ -284,7 +284,7 @@ const deleteClue = async (clueId: string) => {
             cases.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.title}
-                 <button >🗑️</button>
+                 
               </option>
             ))
           )}
