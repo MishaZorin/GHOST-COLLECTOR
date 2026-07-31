@@ -1,10 +1,4 @@
-<!-- <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <style>
-        /* Общие настройки терминала */
-        body { 
+body { 
             width: 340px; 
             padding: 15px; 
             font-family: 'Courier New', Courier, monospace; 
@@ -139,33 +133,23 @@
             text-decoration: underline;
             color: #00ff66;
         }
-    </style>
-</head>
-<body>
-    <h2>GHOST_COLLECTOR</h2>
+        .deleteButton {
+  width: 24px;                   /* фиксированная ширина для ровной сетки */
+  height: 24px;
+  padding: 0;
+  margin-left: 8px;
+  background-color: transparent;
+  border: 1px solid #ff3366;
+  color: #ff3366;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 0;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;       /* центруем эмодзи внутри квадрата */
+  transition: all 0.15s ease;
+  box-shadow: 0 0 4px rgba(255, 51, 102, 0.4);
+}
 
-    <!-- Раздел Кейсов -->
-    <div class="section">
-        <h3>[01] SELECT_ACTIVE_CASE</h3>
-        <select id="caseSelect"></select>
-        
-        <input type="text" id="newCaseInput" placeholder="NEW_CASE_NAME...">
-        <button id="createCaseBtn" style="border-color: #28a745; color: #28a745;">INITIALIZE_CASE</button>
-    </div>
-
-    <!-- Раздел Улик -->
-    <div class="section">
-        <h3>[02] DATA_CAPTURE</h3>
-        <button id="actionBtn">DUMP_CURRENT_TAB_TO_CASE</button>
-        <div id="status"></div>
-    </div>
-
-    <!-- Лог Сохраненных данных -->
-    <div>
-        <h3>[03] CAPTURED_CLUES_LOG</h3>
-        <ul id="linksList"></ul>
-    </div>
-
-    <script src="popup.js"></script>
-</body>
-</html> -->

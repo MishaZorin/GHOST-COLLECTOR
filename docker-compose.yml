@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: ghost_collector_db
+    restart: always
+    environment:
+      POSTGRES_USER: ghost_operator
+      POSTGRES_PASSWORD: top_secret_password_2026
+      POSTGRES_DB: ghost_clues_db
+    ports:
+      - "5439:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "passport-local": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.2.2",
+    "@types/passport-local": "^1.0.38"
+  }
+}
