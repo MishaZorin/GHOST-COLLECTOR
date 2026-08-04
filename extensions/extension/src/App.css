@@ -1,155 +1,276 @@
+/* --- СБРОС И ОСНОВА --- */
 body { 
-            width: 340px; 
-            padding: 15px; 
-            font-family: 'Courier New', Courier, monospace; 
-            background-color: #0c0f12; 
-            color: #00ff66; /* Неоново-зеленый цвет терминала */
-            margin: 0;
-            box-sizing: border-box;
-        }
-
-        h2 { 
-            font-size: 16px; 
-            text-transform: uppercase; 
-            letter-spacing: 2px; 
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #00ff66;
-            border-bottom: 2px dashed #00ff66;
-            padding-bottom: 5px;
-            text-shadow: 0 0 5px rgba(0, 255, 102, 0.5);
-        }
-
-        h3 { 
-            margin: 12px 0 6px 0; 
-            font-size: 11px; 
-            text-transform: uppercase; 
-            letter-spacing: 1px;
-            color: #8899a6; 
-        }
-
-        .section { 
-            margin-bottom: 15px; 
-            padding-bottom: 12px; 
-            border-bottom: 1px dashed #203040; 
-        }
-
-        /* Резкие элементы управления */
-        input, select, button { 
-            width: 100%; 
-            padding: 8px; 
-            box-sizing: border-box; 
-            margin-top: 6px; 
-            background-color: #14191f;
-            border: 1px solid #00ff66;
-            color: #00ff66;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
-            border-radius: 0px; /* Полностью убираем скругления */
-            outline: none;
-        }
-
-        input:focus, select:focus {
-            background-color: #1a222a;
-            box-shadow: 0 0 5px rgba(0, 255, 102, 0.3);
-        }
-
-        /* Выпадающий список с кастомной темной подложкой */
-        select option {
-            background: #14191f;
-            color: #00ff66;
-        }
-
-        /* Агрессивные кнопки */
-        button { 
-            cursor: pointer; 
-            background: transparent; 
-            font-weight: bold;
-            text-transform: uppercase;
-            transition: all 0.2s ease;
-        }
-        
-        #actionBtn {
-            background-color: rgba(0, 255, 102, 0.1);
-        }
-
-        button:hover { 
-            background: #00ff66 !important; 
-            color: #0c0f12 !important; 
-            box-shadow: 0 0 8px #00ff66;
-        }
-
-        /* Логи и статусы */
-        #status { 
-            font-size: 11px; 
-            margin-top: 8px; 
-            text-transform: uppercase;
-        }
-
-        /* Список улик (Clues) */
-        ul { 
-            list-style-type: none; 
-            padding: 0; 
-            margin: 0; 
-            max-height: 160px; 
-            overflow-y: auto; 
-            border: 1px solid #203040;
-            background-color: #080a0d;
-        }
-
-        /* Кастомизация скроллбара под терминал */
-        ul::-webkit-scrollbar {
-            width: 5px;
-        }
-        ul::-webkit-scrollbar-track {
-            background: #0c0f12;
-        }
-        ul::-webkit-scrollbar-thumb {
-            background: #203040;
-        }
-
-        li { 
-            padding: 6px 8px; 
-            border-bottom: 1px solid #14191f; 
-            font-size: 11px; 
-            word-break: break-all;
-            display: flex;
-            align-items: flex-start;
-        }
-        
-        li::before {
-            content: ">> ";
-            color: #ff3366; /* Красный маркер улик */
-            margin-right: 5px;
-            flex-shrink: 0;
-        }
-
-        li a { 
-            color: #00ccff; /* Голубой цвет для ссылок, чтобы выделялись */
-            text-decoration: none; 
-        }
-        
-        li a:hover {
-            text-decoration: underline;
-            color: #00ff66;
-        }
-        .deleteButton {
-  width: 24px;                   /* фиксированная ширина для ровной сетки */
-  height: 24px;
-  padding: 0;
-  margin-left: 8px;
-  background-color: transparent;
-  border: 1px solid #ff3366;
-  color: #ff3366;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 13px;
-  cursor: pointer;
-  border-radius: 0;
-  outline: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;       /* центруем эмодзи внутри квадрата */
-  transition: all 0.15s ease;
-  box-shadow: 0 0 4px rgba(255, 51, 102, 0.4);
+    width: 340px; 
+    padding: 20px; 
+    font-family: 'Courier New', Courier, monospace; 
+    background-color: #080a0c; /* Более глубокий, дорогой черный */
+    color: #00ff66; 
+    margin: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
 }
 
+/* Все элементы по умолчанию border-box */
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+/* Стилизация глобального скроллбара окна */
+::-webkit-scrollbar {
+    width: 4px;
+}
+::-webkit-scrollbar-track {
+    background: #080a0c;
+}
+::-webkit-scrollbar-thumb {
+    background: #1a242d;
+}
+
+/* --- ШАПКА И СЕКЦИИ --- */
+h2 { 
+    font-size: 13px; 
+    font-weight: 900;
+    text-transform: uppercase; 
+    letter-spacing: 3px; 
+    margin: 0 0 20px 0;
+    color: #00ff66;
+    border-bottom: 1px solid #1a242d;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+h3 { 
+    margin: 0 0 10px 0; 
+    font-size: 10px; 
+    text-transform: uppercase; 
+    letter-spacing: 1.5px;
+    color: #4a5a6a; /* Приглушенный стальной цвет для заголовков блоков */
+}
+
+h4 {
+    margin: 10px 0 6px 0;
+    font-size: 10px;
+    color: #4a5a6a;
+    letter-spacing: 1px;
+}
+
+.section { 
+    margin-bottom: 20px; 
+    padding-bottom: 15px; 
+    border-bottom: 1px dashed #1a242d; 
+}
+
+/* Исключаем нижнюю линию у последней секции */
+.section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Секция логаута на самом верху */
+.section-header {
+    border-bottom: none;
+    margin-bottom: 15px;
+    padding-bottom: 0;
+}
+.section-header button {
+    width: auto;
+    font-size: 9px;
+    padding: 4px 8px;
+    color: #ff3366;
+    border-color: #ff3366;
+    float: right;
+}
+
+/* --- ИНПУТЫ И КНОПКИ --- */
+input, select, button { 
+    width: 100%; 
+    padding: 10px 12px; 
+    margin-top: 8px; 
+    background-color: #0d1216; /* Чистый темный фон */
+    border: 1px solid #1a242d; /* Тонкие стильные границы вместо ядовито-зеленых */
+    color: #00ff66;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 11px;
+    border-radius: 0px; 
+    outline: none;
+    transition: all 0.15s ease;
+}
+
+input::placeholder {
+    color: #2a3a4a;
+}
+
+input:focus, select:focus {
+    background-color: #12181e;
+    border-color: #00ff66; /* Зеленеет только при фокусе */
+}
+
+select option {
+    background: #0d1216;
+    color: #00ff66;
+}
+
+/* Кнопки действий */
+button { 
+    cursor: pointer; 
+    background: #0d1216; 
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#actionBtn {
+    border-color: #00ff66;
+    background-color: rgba(0, 255, 102, 0.03);
+}
+
+button:hover { 
+    background: #00ff66 !important; 
+    color: #080a0c !important; 
+    border-color: #00ff66;
+}
+
+/* --- ТЕГИ (TAGS) --- */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0 14px 0;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 6px 4px 8px;
+    border: 1px solid #1a242d;
+    color: #8899a6;
+    background: #0d1216;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+}
+
+/* Кнопка корзины внутри тега */
+.tag .deleteButton {
+    width: auto;
+    height: auto;
+    margin: 0 0 0 6px;
+    padding: 0;
+    background: transparent !important;
+    border: none;
+    color: #ff3366 !important;
+    font-size: 10px;
+    display: inline-block;
+    box-shadow: none;
+}
+.tag .deleteButton:hover {
+    color: #fff !important;
+    transform: scale(1.1);
+}
+
+/* --- ЛОГ УЛИК (CLUES LOG) --- */
+ul { 
+    list-style-type: none; 
+    padding: 0; 
+    margin: 8px 0 0 0; 
+    max-height: 180px; 
+    overflow-y: auto; 
+    border: 1px solid #1a242d;
+    background-color: #0d1216;
+}
+
+li { 
+    padding: 8px 12px; 
+    border-bottom: 1px solid #1a242d; 
+    font-size: 11px; 
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Ссылку влево, корзину вправо */
+}
+
+li:last-child {
+    border-bottom: none;
+}
+        
+li::before {
+    content: "»";
+    color: #4a5a6a; /* Спокойный маркер вместо агрессивного красного */
+    margin-right: 8px;
+    flex-shrink: 0;
+}
+
+li a { 
+    color: #00ff66; /* Ссылки теперь того же цвета, чтобы не ломать минимализм */
+    text-decoration: none; 
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Аккуратно обрезает длинные URL */
+    padding-right: 10px;
+}
+        
+li a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+/* Кнопка удаления в списке улик */
+li .deleteButton {
+    width: 20px;                   
+    height: 20px;
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: 1px solid #1a242d;
+    color: #ff3366;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;       
+    flex-shrink: 0;
+    box-shadow: none;
+}
+
+li .deleteButton:hover {
+    background: #ff3366 !important;
+    color: #080a0c !important;
+    border-color: #ff3366;
+}
+
+/* --- СТАТУСЫ И ОШИБКИ --- */
+#status { 
+    font-size: 10px; 
+    margin-top: 10px; 
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 6px;
+    border: 1px solid currentColor;
+    background: rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+.capture-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.capture-buttons button {
+    margin-top: 0; 
+    flex: 1;
+}
+
+#screenshotBtn {
+    border-color: #00ccff;
+    color: #00ccff;
+    background-color: rgba(0, 204, 255, 0.03);
+}
+
+#screenshotBtn:hover {
+    background: #00ccff !important;
+    color: #080a0c !important;
+    border-color: #00ccff;
+    box-shadow: 0 0 8px #00ccff;
+}

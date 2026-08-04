@@ -10,6 +10,9 @@ export class Case {
 
     @CreateDateColumn()
     createdAt!: Date;
+    // Означает, что это поле может быть пустым (null
+     @Column('text', { array: true, nullable: true })
+  tags?: string[];
 
     
     @OneToMany(() => Clue, (clue) => clue.case)

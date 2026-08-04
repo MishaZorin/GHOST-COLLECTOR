@@ -1,1 +1,4 @@
-export class CreateTagDto {}
+export class CreateTagDto {
+     caseId!: string;
+     tag!: string;
+}

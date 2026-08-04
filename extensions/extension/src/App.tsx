@@ -14,6 +14,7 @@ interface Case {
   id: string;
   title: string;
   clues?: Clue[];
+  tags?: string[];
 }
 
 interface StatusState {
@@ -25,16 +26,18 @@ const API_URL = 'http://localhost:3000';
 
 function App() {
   // React State
-const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('')
   const [cases, setCases] = useState<Case[]>([]);
   const [selectedCaseId, setSelectedCaseId] = useState<string>('');
   const [newCaseTitle, setNewCaseTitle] = useState<string>('');
   const [status, setStatus] = useState<StatusState>({ msg: '', color: '' });
+  const [caseTag, setNewCaseTag] = useState<string>('');
+  // const [, setCluesState] = useState<Clue[]>([]);
 
   // Вспомогательная функция для отображения статуса
   const showStatus = (msg: string, color: string) => {
@@ -50,38 +53,38 @@ const [username, setUsername] = useState('')
     setToken(null);
   };
   const handleAuth = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError('');
-  
-  const endpoint = isRegister ? '/auth/register' : '/auth/login';
-  
-  // Формируем payload: если регистрация — передаем username, email, password
-  const payload = isRegister 
-    ? { username, email, password } 
-    : { email, password };
+    e.preventDefault();
+    setError('');
 
-  try {
-    const res = await fetch(`${API_URL}${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload), // 👈 Раньше тут пропадал username
-    });
+    const endpoint = isRegister ? '/auth/register' : '/auth/login';
 
-    const data = await res.json();
-    if (!res.ok) {
-      // Если NestJS вернул массив ошибок от class-validator
-      const errorMessage = Array.isArray(data.message) 
-        ? data.message.join(', ') 
-        : data.message;
-      throw new Error(errorMessage || 'AUTH_FAILED');
+    // Формируем payload: если регистрация — передаем username, email, password
+    const payload = isRegister
+      ? { username, email, password }
+      : { email, password };
+
+    try {
+      const res = await fetch(`${API_URL}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload), // 👈 Раньше тут пропадал username
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        // Если NestJS вернул массив ошибок от class-validator
+        const errorMessage = Array.isArray(data.message)
+          ? data.message.join(', ')
+          : data.message;
+        throw new Error(errorMessage || 'AUTH_FAILED');
+      }
+
+      // Сохраняем токен
+      saveToken(data.access_token);
+    } catch (err: any) {
+      setError(err.message || 'AUTH_ERROR');
     }
-
-    // Сохраняем токен
-    saveToken(data.access_token);
-  } catch (err: any) {
-    setError(err.message || 'AUTH_ERROR');
-  }
-};
+  };
   if (!token) {
     return (
       <div style={{ padding: 20, color: '#00ff66', backgroundColor: '#0a0a0a', fontFamily: 'monospace' }}>
@@ -89,38 +92,38 @@ const [username, setUsername] = useState('')
         {error && <div style={{ color: 'red' }}>{error}</div>}
         <form onSubmit={handleAuth}>
           <div style={{ marginBottom: 10 }}>
-    <label>USERNAME:</label><br />
-    <input 
-      type="text" 
-      value={username} 
-      onChange={(e) => setUsername(e.target.value)} 
-      required 
-    />
-  </div>
+            <label>USERNAME:</label><br />
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
           <div>
             <label>EMAIL:</label><br />
-            <input 
-              type="email" 
-              value={email} 
-              onChange={(e) => setEmail(e.target.value)} 
-              required 
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
           <div style={{ marginTop: 10 }}>
             <label>PASSWORD:</label><br />
-            <input 
-              type="password" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              required 
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <button type="submit" style={{ marginTop: 15 }}>
             {isRegister ? 'REGISTER' : 'LOGIN'}
           </button>
         </form>
-        <button 
-          onClick={() => setIsRegister(!isRegister)} 
+        <button
+          onClick={() => setIsRegister(!isRegister)}
           style={{ marginTop: 10, background: 'none', border: 'none', color: '#00ff66', cursor: 'pointer' }}
         >
           {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрироваться'}
@@ -153,6 +156,24 @@ const [username, setUsername] = useState('')
   useEffect(() => {
     loadCases();
   }, []);
+//  const loadClues = async () => {
+//   try {
+//     const res = await fetch(`${API_URL}/clues`);
+
+//     if (!res.ok) {
+//       throw new Error("Fetch failed");
+//     }
+
+//     const cluesData: Clue[] = await res.json();
+//     setCluesState(cluesData); // ✅ Теперь точно работает
+//   } catch (err) {
+//     showStatus("ERR_CONNECTION_FAILED", "#ff3366");
+//   }
+// };
+
+//  useEffect(() => {
+//   loadClues();
+// }, []);
 
   // Находим текущий выбранный объект кейса
   const activeCase = cases.find((c) => c.id === selectedCaseId);
@@ -167,20 +188,22 @@ const [username, setUsername] = useState('')
 
     try {
       const res = await fetch(`${API_URL}/cases`, {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  },
-  body: JSON.stringify({
-    title: newCaseTitle,
-  }),
-})
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title: newCaseTitle,
+          // tag: caseTag
+        }),
+      })
 
       if (res.ok) {
         setNewCaseTitle('');
         showStatus('CASE_INITIALIZED', '#00ff66');
         await loadCases();
+
       } else {
         showStatus('ERR_CASE_CREATE_FAILED', '#ff3366');
       }
@@ -188,6 +211,60 @@ const [username, setUsername] = useState('')
       showStatus('ERR_SERVER_OFFLINE', '#ff3366');
     }
   };
+
+
+  const handleAddTag = async (caseId: string, tag: string) => {
+    const res = await fetch(`${API_URL}/cases/${caseId}/tags`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        tag,
+      }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to add tag");
+    }
+        setCases(prevCases => 
+      prevCases.map(c => 
+        c.id === caseId 
+          ? { ...c, tags: [...(c.tags || []), tag.trim()] }
+          : c
+      )
+    );
+
+    return await res.json();
+  };
+
+
+  const deleteTag = async (caseId: string, tag: string) => {
+    const res = await fetch(`${API_URL}/cases/${caseId}/tags`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        tag,
+      }),
+    });
+    setCases(prevCases => 
+      prevCases.map(c => 
+        c.id === caseId 
+          ? { ...c, tags: (c.tags || []).filter(t => t !== tag) }
+          : c
+      )
+    );
+    if (!res.ok) {
+      throw new Error("Failed to add tag");
+    }
+
+    return await res.json();
+  };
+
 
   // --- 3. Сохранение текущей вкладки как улики (POST /clues) ---
   const handleDumpCurrentTab = async () => {
@@ -197,7 +274,7 @@ const [username, setUsername] = useState('')
     }
 
     // Проверяем наличие chrome.tabs (безопасно для разработки в обычном браузере)
-    if (typeof chrome === 'undefined' || !chrome?.tabs)  {
+    if (typeof chrome === 'undefined' || !chrome?.tabs) {
       showStatus('ERR_CHROME_API_NOT_AVAILABLE', '#ff3366');
       return;
     }
@@ -222,6 +299,7 @@ const [username, setUsername] = useState('')
       if (res.ok) {
         showStatus('DUMP_SUCCESSFUL', '#00ff66');
         await loadCases(); // Обновляем список, чтобы улика сразу появилась
+        // await loadClues()
       } else {
         const errorData = await res.json();
         showStatus(`ERR: ${errorData.message || 'DUMP_FAILED'}`, '#ff3366');
@@ -231,114 +309,229 @@ const [username, setUsername] = useState('')
     }
   };
   // Функция удаления улики
-const deleteClue = async (clueId: string) => {
-  if (!clueId) {
-    showStatus('CLUE_ID_NOT_FOUND', '#ff3366');
-    return;
-  }
-
-  try {
-    const res = await fetch(`${API_URL}/clues/${clueId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (res.ok) {
-      showStatus('CLUE_DELETED_SUCCESSFULLY', '#00ff66');
-      await loadCases(); // Обновляем список кейсов
-    } else {
-      const errorData = await res.json();
-      showStatus(`ERR: ${errorData.message || 'DELETE_FAILED'}`, '#ff3366');
+  const deleteClue = async (clueId: string) => {
+    if (!clueId) {
+      showStatus('CLUE_ID_NOT_FOUND', '#ff3366');
+      return;
     }
-  } catch (err) {
-    showStatus('ERR_SERVER_OFFLINE', '#ff3366');
-  }
+
+    try {
+      const res = await fetch(`${API_URL}/clues/${clueId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (res.ok) {
+        showStatus('CLUE_DELETED_SUCCESSFULLY', '#00ff66');
+        await loadCases(); // Обновляем список кейсов
+      } else {
+        const errorData = await res.json();
+        showStatus(`ERR: ${errorData.message || 'DELETE_FAILED'}`, '#ff3366');
+      }
+    } catch (err) {
+      showStatus('ERR_SERVER_OFFLINE', '#ff3366');
+    }
+  };
+
+
+const handleCaptureScreenshot = () => {
+  console.log('📸 Делаем скриншот...');
+  
+  // Делаем скриншот прямо здесь
+  chrome.tabs.captureVisibleTab(
+    { format: 'jpeg', quality: 80 },
+    async (dataUrl) => {
+      // Проверяем ошибку
+      if (chrome.runtime.lastError || !dataUrl) {
+        console.error('❌ Ошибка:', chrome.runtime.lastError?.message);
+        showStatus('❌ ' + (chrome.runtime.lastError?.message || 'Ошибка скриншота'), '#ff3366');
+        return;
+      }
+
+      console.log('✅ Скриншот сделан!');
+
+      // Отправляем на сервер
+      try {
+        const response = await fetch('http://localhost:3000/clues', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: '[SCREENSHOT]',
+            url: dataUrl,
+            caseId: selectedCaseId,
+          }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('❌ Ошибка сервера:', response.status, errorText);
+          showStatus(`❌ Сервер: ${response.status}`, '#ff3366');
+          return;
+        }
+        
+
+        // Успех!
+        // await loadClues()
+        console.log('✅ Скриншот отправлен!');
+        showStatus('✅ Скриншот сохранен!', '#00ff66');
+
+      } catch (error) {
+        console.error('❌ Ошибка отправки:', error);
+        showStatus('❌ Ошибка сети', '#ff3366');
+      }
+    }
+  );
 };
+
+
 
   return (
     <div className="ghost-collector">
-      {/* HEADER TITLE */}
       <h2>GHOST_COLLECTOR</h2>
 
-      {/* SECTION 0 — SESSION CONTROL */}
       <div className="section section-header">
         <button onClick={handleLogout}>LOGOUT</button>
       </div>
 
-      {/* SECTION 1 — SELECT ACTIVE CASE */}
       <div className="section">
         <h3>[01] SELECT_ACTIVE_CASE</h3>
-
-        <select
-          value={selectedCaseId}
-          onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-            setSelectedCaseId(e.target.value)
-          }
-        >
-          {cases.length === 0 ? (
-            <option value="">NO_CASES_FOUND</option>
-          ) : (
-            cases.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.title}
-                 
-              </option>
-            ))
-          )}
+        <select value={selectedCaseId} onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedCaseId(e.target.value)}>
+          {cases.length === 0 ? <option value="">NO_CASES_FOUND</option> : cases.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
         </select>
 
-        <input
-          type="text"
-          placeholder="NEW_CASE_NAME..."
-          value={newCaseTitle}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setNewCaseTitle(e.target.value)
-          }
-        />
-        <button id="actionBtn" onClick={handleCreateCase}>
-          INITIALIZE_CASE
-        </button>
-        
-      </div>
-
-      {/* SECTION 2 — DATA CAPTURE */}
-      <div className="section">
-        <h3>[02] DATA_CAPTURE</h3>
-        <button onClick={handleDumpCurrentTab}>
-          DUMP_CURRENT_TAB_TO_CASE
-        </button>
-        {status.msg && (
-          <div id="status" style={{ color: status.color, marginTop: '8px' }}>
-            {status.msg}
+        {activeCase && (
+          <div>
+            <h4>TAGS:</h4>
+            <div className="tags">
+              {activeCase?.tags?.map(tag => (
+                <span className="tag" key={tag}>
+                  #{tag}
+                  <button className="deleteButton" onClick={() => deleteTag(selectedCaseId, tag)}>🗑️</button>
+                </span>
+              ))}
+            </div>
           </div>
         )}
+
+        <input type="text" placeholder="NEW_CASE_NAME..." value={newCaseTitle} onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCaseTitle(e.target.value)} />
+        <input type="text" placeholder="NEW_CASE_TAG..." value={caseTag} onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCaseTag(e.target.value)} />
+        <button id="actionBtn" onClick={handleCreateCase}>INITIALIZE_CASE</button>
+        <button onClick={() => handleAddTag(selectedCaseId, caseTag)}>ADD TAG</button>
       </div>
 
-      {/* SECTION 3 — CAPTURED CLUES LOG */}
+      {/* 🔥 ИЗМЕНЕННАЯ СЕКЦИЯ 2 — КНОПКИ В РЯД */}
       <div className="section">
-        <h3>[03] CAPTURED_CLUES_LOG</h3>
-        <ul>
-          {!activeCase ||
-          !activeCase.clues ||
-          activeCase.clues.length === 0 ? (
-            <li>NO_CLUES_ATTACHED</li>
+        <h3>[02] DATA_CAPTURE</h3>
+        <div className="capture-buttons">
+          <button onClick={handleDumpCurrentTab}>DUMP_TAB</button>
+          <button onClick={handleCaptureScreenshot} id="screenshotBtn">CAPTURE_SCREEN</button>
+        </div>
+        {status.msg && <div id="status" style={{ color: status.color, marginTop: '8px' }}>{status.msg}</div>}
+      </div>
+
+      {/* 🔥 ИЗМЕНЕННАЯ СЕКЦИЯ 3 — КЛИКАБЕЛЬНЫЕ СКРИНШОТЫ */}
+      <div className="section">
+       <h3>[03] CAPTURED_CLUES_LOG</h3>
+<ul style={{ 
+  padding: 0,
+  margin: 0,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '8px'
+}}>
+  {!activeCase || !activeCase.clues || activeCase.clues.length === 0 ? (
+    <li style={{ 
+      listStyle: 'none', 
+      color: '#666',
+      padding: '10px',
+      textAlign: 'center',
+      fontSize: '14px'
+    }}>
+      Нет улик
+    </li>
+  ) : (
+    activeCase.clues.map((clue, idx) => {
+      const isScreenshot = clue.url && clue.url.startsWith('data:');
+      return (
+        <li key={clue.id || idx} style={{ 
+          listStyle: 'none',
+          padding: '6px 0',
+          borderBottom: '1px solid rgba(255,255,255,0.05)'
+        }}>
+          {isScreenshot ? (
+            <div style={{ marginBottom: '4px' }}>
+              <img
+                src={clue.url}
+                alt={clue.title || 'Скриншот'}
+                style={{ 
+                  width: "100%",
+                  maxWidth: "350px",
+                  height: "auto",
+                  maxHeight: "250px",
+                  objectFit: "contain",
+                  borderRadius: "6px",
+                  cursor: 'pointer',
+                  display: 'block'
+                }}
+                onClick={() => window.open(clue.url, '_blank')}
+              />
+              {clue.title && (
+                <div style={{ 
+                  fontSize: '11px', 
+                  color: '#888', 
+                  marginTop: '3px'
+                }}>
+                  {clue.title}
+                </div>
+              )}
+            </div>
           ) : (
-            activeCase.clues.map((clue, idx) => (
-              <li key={clue.id || idx}>
-                <a href={clue.url} target="_blank" rel="noreferrer">
-                  {clue.title || clue.url}
-                </a>
-                {/* if (clue.id) {
-  deleteClue(clue.id)
-} */}
-                <button className='deleteButton' onClick={() => clue.id && deleteClue(clue.id)}>🗑️</button>
-              </li>
-            ))
+            <a
+              href={clue.url}
+              target="_blank"
+              rel="noreferrer"
+              style={{ 
+                display: 'block',
+                padding: '6px 10px',
+                background: 'rgba(255,255,255,0.03)',
+                borderRadius: '4px',
+                textDecoration: 'none',
+                color: '#64B5F6',
+                fontSize: '13px',
+                wordBreak: 'break-all'
+              }}
+            >
+              🔗 {clue.title || clue.url}
+            </a>
           )}
-        </ul>
+
+          <button
+            className='deleteButton'
+            onClick={() => clue.id && deleteClue(clue.id)}
+            style={{
+              marginTop: '4px',
+              background: 'transparent',
+              color: '#ff6b6b',
+              border: 'none',
+              borderRadius: '4px',
+              padding: '2px 8px',
+              cursor: 'pointer',
+              fontSize: '11px'
+            }}
+          >
+            🗑️ 
+          </button>
+        </li>
+      );
+    })
+  )}
+</ul>
       </div>
     </div>
   );
