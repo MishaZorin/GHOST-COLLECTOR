@@ -22,8 +22,7 @@ interface StatusState {
   color: string;
 }
 
-// const API_URL = 'http://10.133.100.100';
-const API_URL = 'http://localhost:3000';
+const API_URL = 'http://10.133.100.100/';
 
 function App() {
   // React State
@@ -136,11 +135,7 @@ function App() {
   // --- 1. Загрузка списка кейсов ---
   const loadCases = async () => {
     try {
-      const res = await fetch(`${API_URL}/cases`, {
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
-});
+      const res = await fetch(`${API_URL}/cases`);
       if (!res.ok) throw new Error('Fetch failed');
 
       const data: Case[] = await res.json();
@@ -158,11 +153,9 @@ function App() {
   };
 
   // Автоматический старт загрузки при монтировании компонента
-useEffect(() => {
-  if (token) {
+  useEffect(() => {
     loadCases();
-  }
-}, [token]);
+  }, []);
 //  const loadClues = async () => {
 //   try {
 //     const res = await fetch(`${API_URL}/clues`);
@@ -296,10 +289,7 @@ Authorization: `Bearer ${token}`,
 
       const res = await fetch(`${API_URL}/clues`, {
         method: 'POST',
-         headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: tab.title || tab.url,
           url: tab.url,
@@ -366,7 +356,7 @@ const handleCaptureScreenshot = () => {
 
       // Отправляем на сервер
       try {
-        const response = await fetch(`${API_URL}/clues`, {
+        const response = await fetch('${API_URL}/clues', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
