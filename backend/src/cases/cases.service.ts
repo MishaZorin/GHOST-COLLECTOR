@@ -39,6 +39,16 @@ export class CasesService {
       },
     });
   }
+  async getCase(caseId: string) {
+  return this.casesRepository.findOne({
+    where: {
+      id: caseId,
+    },
+     relations: {
+      clues: true,
+    },
+  });
+}
 
   // Добавить тег только в свой case
   async addTagToCase(dto: CreateTagDto & { userId: string }) {

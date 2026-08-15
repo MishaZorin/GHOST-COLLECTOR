@@ -36,6 +36,10 @@ export class CasesController {
   findAll(@Req() req: any) {
     return this.casesService.findAll(req.user.userId);
   }
+  @Get(':caseId')
+getCase(@Param('caseId') caseId: string) {
+  return this.casesService.getCase(caseId);
+}
 
   @Post(':id/tags')
   addTagToCase(

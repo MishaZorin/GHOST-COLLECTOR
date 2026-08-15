@@ -2,7 +2,6 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
 import './App.css';
 
-// 1. Описываем интерфейсы типов
 interface Clue {
   id?: string;
   title: string;
@@ -16,7 +15,15 @@ interface Case {
   clues?: Clue[];
   tags?: string[];
 }
-
+type CaseData = {
+  id: string;
+  title: string;
+  clues: {
+    id: string;
+    title: string;
+    url: string;
+  }[];
+};
 interface StatusState {
   msg: string;
   color: string;
@@ -38,7 +45,8 @@ function App() {
   const [newCaseTitle, setNewCaseTitle] = useState<string>('');
   const [status, setStatus] = useState<StatusState>({ msg: '', color: '' });
   const [caseTag, setNewCaseTag] = useState<string>('');
-  // const [, setCluesState] = useState<Clue[]>([]);
+const [selectedCase, setSelectedCase] = useState<CaseData | null>(null);
+
 
   // Вспомогательная функция для отображения статуса
   const showStatus = (msg: string, color: string) => {
@@ -181,6 +189,24 @@ useEffect(() => {
 //  useEffect(() => {
 //   loadClues();
 // }, []);
+const getCaseData = async (caseId: string) => {
+  const response = await fetch(
+    `${API_URL}/cases/${caseId}`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+   const data: CaseData = await response.json();
+
+  setSelectedCase(data);
+    console.log('CASE:', data);
+  console.log('CLUES:', data.clues);
+};
+
 
   // Находим текущий выбранный объект кейса
   const activeCase = cases.find((c) => c.id === selectedCaseId);
@@ -198,7 +224,6 @@ useEffect(() => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          
 Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
@@ -348,68 +373,127 @@ Authorization: `Bearer ${token}`,
   };
 
 
-const handleCaptureScreenshot = () => {
-  console.log('📸 Делаем скриншот...');
+// const handleCaptureScreenshot = () => {
+//   console.log('📸 Делаем скриншот...');
   
-  // Делаем скриншот прямо здесь
-  chrome.tabs.captureVisibleTab(
-    { format: 'jpeg', quality: 80 },
-    async (dataUrl) => {
-      // Проверяем ошибку
-      if (chrome.runtime.lastError || !dataUrl) {
-        console.error('❌ Ошибка:', chrome.runtime.lastError?.message);
-        showStatus('❌ ' + (chrome.runtime.lastError?.message || 'Ошибка скриншота'), '#ff3366');
-        return;
-      }
+//   // Делаем скриншот прямо здесь
+//   chrome.tabs.captureVisibleTab(
+//     { format: 'jpeg', quality: 80 },
+//     async (dataUrl) => {
+//       // Проверяем ошибку
+//       if (chrome.runtime.lastError || !dataUrl) {
+//         console.error('❌ Ошибка:', chrome.runtime.lastError?.message);
+//         showStatus('❌ ' + (chrome.runtime.lastError?.message || 'Ошибка скриншота'), '#ff3366');
+//         return;
+//       }
 
-      console.log('✅ Скриншот сделан!');
+//       console.log('✅ Скриншот сделан!');
 
-      // Отправляем на сервер
-      try {
-        const response = await fetch(`${API_URL}/clues`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            title: '[SCREENSHOT]',
-            url: dataUrl,
-            caseId: selectedCaseId,
-          }),
-        });
+//       // Отправляем на сервер
+//       try {
+//         const response = await fetch(`${API_URL}/clues`, {
+//           method: 'POST',
+//           headers: {
+//             'Content-Type': 'application/json',
+//             'Authorization': `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({
+//             title: '[SCREENSHOT]',
+//             url: dataUrl,
+//             caseId: selectedCaseId,
+//           }),
+//         });
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          console.error('❌ Ошибка сервера:', response.status, errorText);
-          showStatus(`❌ Сервер: ${response.status}`, '#ff3366');
-          return;
-        }
+//         if (!response.ok) {
+//           const errorText = await response.text();
+//           console.error('❌ Ошибка сервера:', response.status, errorText);
+//           showStatus(`❌ Сервер: ${response.status}`, '#ff3366');
+//           return;
+//         }
         
 
-        // Успех!
-        // await loadClues()
-        console.log('✅ Скриншот отправлен!');
-        showStatus('✅ Скриншот сохранен!', '#00ff66');
+//         // Успех!
+//         // await loadClues()
+//         console.log('✅ Скриншот отправлен!');
+//         showStatus('✅ Скриншот сохранен!', '#00ff66');
 
-      } catch (error) {
-        console.error('❌ Ошибка отправки:', error);
-        showStatus('❌ Ошибка сети', '#ff3366');
-      }
-    }
-  );
-};
+//       } catch (error) {
+//         console.error('❌ Ошибка отправки:', error);
+//         showStatus('❌ Ошибка сети', '#ff3366');
+//       }
+//     }
+//   );
+// };
 
 
 
   return (
-    <div className="ghost-collector">
+   <div className="ghost-collector">
       <h2>GHOST_COLLECTOR</h2>
 
       <div className="section section-header">
         <button onClick={handleLogout}>LOGOUT</button>
       </div>
+      <div className="beetwener">
+<div className="paySection">
+  <h3>[04] GET_DATA_IN_JSON</h3>
+<select
+  value={selectedCaseId}
+  onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+    const id = e.target.value;
 
+    setSelectedCaseId(id);
+
+    if (id) {
+      getCaseData(id);
+    }
+  }}
+>
+  {cases.length === 0 ? (
+    <option value="">NO_CASES_FOUND</option>
+  ) : (
+    cases.map((c) => (
+      <option key={c.id} value={c.id}>
+        {c.title}
+      </option>
+    ))
+  )}
+</select>
+  <ul
+  style={{
+    padding: 0,
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '8px',
+  }}
+>
+  {!selectedCase?.clues || selectedCase.clues.length === 0 ? (
+    <li
+      style={{
+        listStyle: 'none',
+        color: '#666',
+        padding: '10px',
+        textAlign: 'center',
+        fontSize: '14px',
+      }}
+    >
+      NO_CLUES_FOUND
+    </li>
+  ) : (
+    selectedCase.clues.map((clue) => (
+      <li key={clue.id}>
+        <div>{clue.title}</div>
+        <div>{clue.url}</div>
+      </li>
+    ))
+  )}
+</ul>
+ 
+  
+</div>
+
+<div className="mainSection">
       <div className="section">
         <h3>[01] SELECT_ACTIVE_CASE</h3>
         <select value={selectedCaseId} onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedCaseId(e.target.value)}>
@@ -441,7 +525,7 @@ const handleCaptureScreenshot = () => {
         <h3>[02] DATA_CAPTURE</h3>
         <div className="capture-buttons">
           <button onClick={handleDumpCurrentTab}>DUMP_TAB</button>
-          <button onClick={handleCaptureScreenshot} id="screenshotBtn">CAPTURE_SCREEN</button>
+          
         </div>
         {status.msg && <div id="status" style={{ color: status.color, marginTop: '8px' }}>{status.msg}</div>}
       </div>
@@ -503,8 +587,8 @@ const handleCaptureScreenshot = () => {
               )}
             </div>
           ) : (
-            <a
-              href={clue.url}
+            
+             <a href={clue.url}
               target="_blank"
               rel="noreferrer"
               style={{ 
@@ -516,8 +600,8 @@ const handleCaptureScreenshot = () => {
                 color: '#64B5F6',
                 fontSize: '13px',
                 wordBreak: 'break-all'
-              }}
-            >
+              }}> 
+            
               🔗 {clue.title || clue.url}
             </a>
           )}
@@ -543,6 +627,8 @@ const handleCaptureScreenshot = () => {
     })
   )}
 </ul>
+      </div>
+      </div>
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 /* --- СБРОС И ОСНОВА --- */
 body { 
-    width: 340px; 
+    width: 480px; 
     padding: 20px; 
     font-family: 'Courier New', Courier, monospace; 
     background-color: #080a0c; /* Более глубокий, дорогой черный */
@@ -74,6 +74,8 @@ h4 {
     border-bottom: none;
     margin-bottom: 15px;
     padding-bottom: 0;
+    display: flex;
+    justify-content: flex-end;
 }
 .section-header button {
     width: auto;
@@ -81,7 +83,7 @@ h4 {
     padding: 4px 8px;
     color: #ff3366;
     border-color: #ff3366;
-    float: right;
+    float: none;
 }
 
 /* --- ИНПУТЫ И КНОПКИ --- */
@@ -255,11 +257,13 @@ li .deleteButton:hover {
     display: flex;
     gap: 8px;
     margin-top: 6px;
+    flex-wrap: wrap;
 }
 
 .capture-buttons button {
     margin-top: 0; 
     flex: 1;
+    min-width: 0;
 }
 
 #screenshotBtn {
@@ -273,4 +277,21 @@ li .deleteButton:hover {
     color: #080a0c !important;
     border-color: #00ccff;
     box-shadow: 0 0 8px #00ccff;
+}
+
+/* --- ДВУХКОЛОНОЧНЫЙ LAYOUT (JSON слева / основные секции справа) --- */
+.beetwener {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    /* align-items: flex-start; */
+}
+
+.paySection {
+    flex: 0 0 110px;
+}
+
+.mainSection {
+    flex: 1;
+    min-width: 0;
 }
