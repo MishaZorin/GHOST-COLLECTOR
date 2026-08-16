@@ -2,6 +2,7 @@
 import { useState, useEffect, type ChangeEvent } from 'react';
 import './App.css';
 
+
 interface Clue {
   id?: string;
   title: string;
@@ -16,7 +17,6 @@ interface Case {
   tags?: string[];
 }
 type CaseData = {
-  id: string;
   title: string;
   clues: {
     id: string;
@@ -45,7 +45,10 @@ function App() {
   const [newCaseTitle, setNewCaseTitle] = useState<string>('');
   const [status, setStatus] = useState<StatusState>({ msg: '', color: '' });
   const [caseTag, setNewCaseTag] = useState<string>('');
-const [selectedCase, setSelectedCase] = useState<CaseData | null>(null);
+  const [selectedCase, setSelectedCase] = useState<CaseData | null>(null);
+  // NEW: индикатор загрузки JSON-панели, чтобы не было пустого/мигающего состояния
+  const [jsonLoading, setJsonLoading] = useState<boolean>(false);
+
 
 
   // Вспомогательная функция для отображения статуса
@@ -189,24 +192,41 @@ useEffect(() => {
 //  useEffect(() => {
 //   loadClues();
 // }, []);
+
 const getCaseData = async (caseId: string) => {
-  const response = await fetch(
-    `${API_URL}/cases/${caseId}`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
+  // NEW: показываем LOADING пока идёт запрос, а не пустую панель
+  setJsonLoading(true);
+  try {
+    const response = await fetch(
+      `${API_URL}/cases/${caseId}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-   const data: CaseData = await response.json();
+    const data: CaseData = await response.json();
 
-  setSelectedCase(data);
-    console.log('CASE:', data);
-  console.log('CLUES:', data.clues);
+    setSelectedCase(data);
+
+    console.log('FRONTEND CASE:', data);
+    console.log('FRONTEND CLUES:', data.clues);
+  } catch (err) {
+    showStatus('ERR_CASE_DATA_FAILED', '#ff3366');
+  } finally {
+    setJsonLoading(false);
+  }
 };
+useEffect(() => {
+  if (!selectedCaseId) return;
 
+  getCaseData(selectedCaseId);
+}, [selectedCaseId]);
+// NEW: убран дублирующий useEffect, который отдельно от loadCases() пытался
+// выставить selectedCaseId — это создавало лишний ре-рендер и задержку
+// перед тем как JSON-панель начинала подгружать данные.
 
   // Находим текущий выбранный объект кейса
   const activeCase = cases.find((c) => c.id === selectedCaseId);
@@ -335,6 +355,7 @@ Authorization: `Bearer ${token}`,
       if (res.ok) {
         showStatus('DUMP_SUCCESSFUL', '#00ff66');
         await loadCases(); // Обновляем список, чтобы улика сразу появилась
+        await getCaseData(selectedCaseId); // NEW: обновляем JSON-панель [04] в реальном времени
         // await loadClues()
       } else {
         const errorData = await res.json();
@@ -363,6 +384,7 @@ Authorization: `Bearer ${token}`,
       if (res.ok) {
         showStatus('CLUE_DELETED_SUCCESSFULLY', '#00ff66');
         await loadCases(); // Обновляем список кейсов
+        await getCaseData(selectedCaseId); // NEW: обновляем JSON-панель [04] в реальном времени
       } else {
         const errorData = await res.json();
         showStatus(`ERR: ${errorData.message || 'DELETE_FAILED'}`, '#ff3366');
@@ -440,13 +462,7 @@ Authorization: `Bearer ${token}`,
 <select
   value={selectedCaseId}
   onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-    const id = e.target.value;
-
-    setSelectedCaseId(id);
-
-    if (id) {
-      getCaseData(id);
-    }
+    setSelectedCaseId(e.target.value);
   }}
 >
   {cases.length === 0 ? (
@@ -459,7 +475,7 @@ Authorization: `Bearer ${token}`,
     ))
   )}
 </select>
-  <ul
+<ul
   style={{
     padding: 0,
     margin: 0,
@@ -468,7 +484,20 @@ Authorization: `Bearer ${token}`,
     gap: '8px',
   }}
 >
-  {!selectedCase?.clues || selectedCase.clues.length === 0 ? (
+  {jsonLoading ? (
+    // NEW: показываем явный статус загрузки, а не пустую панель
+    <li
+      style={{
+        listStyle: 'none',
+        color: '#4a5a6a',
+        padding: '10px',
+        textAlign: 'center',
+        fontSize: '14px',
+      }}
+    >
+      LOADING_CASE_DATA...
+    </li>
+  ) : !selectedCase?.clues || selectedCase.clues.length === 0 ? (
     <li
       style={{
         listStyle: 'none',
@@ -483,12 +512,14 @@ Authorization: `Bearer ${token}`,
   ) : (
     selectedCase.clues.map((clue) => (
       <li key={clue.id}>
-        <div>{clue.title}</div>
-        <div>{clue.url}</div>
+        <pre>
+          {JSON.stringify(clue, null, 2)}
+        </pre>
       </li>
     ))
   )}
 </ul>
+
  
   
 </div>

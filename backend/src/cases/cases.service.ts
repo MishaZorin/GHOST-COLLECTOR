@@ -39,15 +39,21 @@ export class CasesService {
       },
     });
   }
-  async getCase(caseId: string) {
-  return this.casesRepository.findOne({
+async getCase(caseId: string) {
+  console.log('GET CASE ID:', caseId);
+
+  const result = await this.casesRepository.findOne({
     where: {
       id: caseId,
     },
-     relations: {
+    relations: {
       clues: true,
     },
   });
+
+  console.log('GET CASE RESULT:', result);
+
+  return result;
 }
 
   // Добавить тег только в свой case

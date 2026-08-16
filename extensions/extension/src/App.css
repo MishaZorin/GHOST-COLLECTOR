@@ -1,21 +1,19 @@
 /* --- СБРОС И ОСНОВА --- */
 body { 
-    width: 480px; 
+    width: 600px; 
     padding: 20px; 
     font-family: 'Courier New', Courier, monospace; 
-    background-color: #080a0c; /* Более глубокий, дорогой черный */
+    background-color: #080a0c;
     color: #00ff66; 
     margin: 0;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
 }
 
-/* Все элементы по умолчанию border-box */
 *, *:before, *:after {
     box-sizing: inherit;
 }
 
-/* Стилизация глобального скроллбара окна */
 ::-webkit-scrollbar {
     width: 4px;
 }
@@ -46,7 +44,7 @@ h3 {
     font-size: 10px; 
     text-transform: uppercase; 
     letter-spacing: 1.5px;
-    color: #4a5a6a; /* Приглушенный стальной цвет для заголовков блоков */
+    color: #4a5a6a;
 }
 
 h4 {
@@ -62,14 +60,12 @@ h4 {
     border-bottom: 1px dashed #1a242d; 
 }
 
-/* Исключаем нижнюю линию у последней секции */
 .section:last-of-type {
     border-bottom: none;
     margin-bottom: 0;
     padding-bottom: 0;
 }
 
-/* Секция логаута на самом верху */
 .section-header {
     border-bottom: none;
     margin-bottom: 15px;
@@ -91,8 +87,8 @@ input, select, button {
     width: 100%; 
     padding: 10px 12px; 
     margin-top: 8px; 
-    background-color: #0d1216; /* Чистый темный фон */
-    border: 1px solid #1a242d; /* Тонкие стильные границы вместо ядовито-зеленых */
+    background-color: #0d1216;
+    border: 1px solid #1a242d;
     color: #00ff66;
     font-family: 'Courier New', Courier, monospace;
     font-size: 11px;
@@ -107,7 +103,7 @@ input::placeholder {
 
 input:focus, select:focus {
     background-color: #12181e;
-    border-color: #00ff66; /* Зеленеет только при фокусе */
+    border-color: #00ff66;
 }
 
 select option {
@@ -115,7 +111,6 @@ select option {
     color: #00ff66;
 }
 
-/* Кнопки действий */
 button { 
     cursor: pointer; 
     background: #0d1216; 
@@ -154,7 +149,6 @@ button:hover {
     letter-spacing: 0.5px;
 }
 
-/* Кнопка корзины внутри тега */
 .tag .deleteButton {
     width: auto;
     height: auto;
@@ -190,7 +184,7 @@ li {
     word-break: break-all;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Ссылку влево, корзину вправо */
+    justify-content: space-between;
 }
 
 li:last-child {
@@ -199,18 +193,18 @@ li:last-child {
         
 li::before {
     content: "»";
-    color: #4a5a6a; /* Спокойный маркер вместо агрессивного красного */
+    color: #4a5a6a;
     margin-right: 8px;
     flex-shrink: 0;
 }
 
 li a { 
-    color: #00ff66; /* Ссылки теперь того же цвета, чтобы не ломать минимализм */
+    color: #00ff66;
     text-decoration: none; 
     flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Аккуратно обрезает длинные URL */
+    text-overflow: ellipsis;
     padding-right: 10px;
 }
         
@@ -219,7 +213,6 @@ li a:hover {
     text-decoration: underline;
 }
 
-/* Кнопка удаления в списке улик */
 li .deleteButton {
     width: 20px;                   
     height: 20px;
@@ -284,14 +277,44 @@ li .deleteButton:hover {
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    /* align-items: flex-start; */
+    align-items: flex-start;
 }
 
+/* FIX: было 110px — слишком узко для JSON-данных, расширил */
 .paySection {
-    flex: 0 0 110px;
+    flex: 0 0 260px;
+    min-width: 0;
 }
 
 .mainSection {
     flex: 1;
     min-width: 0;
 }
+
+/* FIX: JSON-список внутри paySection — нужен свой стиль, а не наследование от li с ссылками */
+.paySection ul {
+    max-height: 280px;
+}
+
+.paySection li {
+    display: block;
+    padding: 8px 10px;
+}
+
+.paySection li::before {
+    display: none;
+}
+
+.paySection pre {
+    margin: 0;
+    padding: 0;
+    font-size: 10px;
+    line-height: 1.5;
+    color: #8899a6;
+    white-space: pre-wrap;
+    word-break: break-all;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* --- IOC SCAN --- */
+/*
