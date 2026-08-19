@@ -45,6 +45,9 @@ export class CluesService {
 
     return await this.cluesRepository.save(newClue);
   }
+  async getAllClues(){
+    return await this.casesRepository.find()
+  }
 
   async deleteClue(
     id: string,

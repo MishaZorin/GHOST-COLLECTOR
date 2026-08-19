@@ -8,6 +8,7 @@ import {
   HttpStatus,
   UseGuards,
   Req,
+  Get
 } from '@nestjs/common';
 
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -40,5 +41,9 @@ export class CluesController {
       id,
       req.user.userId,
     );
+  }
+  @Get()
+   async getAllClues(){
+    return await this.cluesService.getAllClues()
   }
 }

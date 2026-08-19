@@ -7,7 +7,8 @@ interface Clue {
   id?: string;
   title: string;
   url: string;
-  caseId?: string;
+  // caseId?: string;
+  createdAt: string
 }
 
 interface Case {
@@ -15,15 +16,9 @@ interface Case {
   title: string;
   clues?: Clue[];
   tags?: string[];
+  createdAt: string
 }
-type CaseData = {
-  title: string;
-  clues: {
-    id: string;
-    title: string;
-    url: string;
-  }[];
-};
+
 interface StatusState {
   msg: string;
   color: string;
@@ -45,9 +40,8 @@ function App() {
   const [newCaseTitle, setNewCaseTitle] = useState<string>('');
   const [status, setStatus] = useState<StatusState>({ msg: '', color: '' });
   const [caseTag, setNewCaseTag] = useState<string>('');
-  const [selectedCase, setSelectedCase] = useState<CaseData | null>(null);
-  // NEW: индикатор загрузки JSON-панели, чтобы не было пустого/мигающего состояния
-  const [jsonLoading, setJsonLoading] = useState<boolean>(false);
+
+
 
 
 
@@ -99,48 +93,140 @@ function App() {
   };
   if (!token) {
     return (
-      <div style={{ padding: 20, color: '#00ff66', backgroundColor: '#0a0a0a', fontFamily: 'monospace' }}>
-        <h2>GHOST_COLLECTOR // AUTH</h2>
-        {error && <div style={{ color: 'red' }}>{error}</div>}
-        <form onSubmit={handleAuth}>
-          <div style={{ marginBottom: 10 }}>
-            <label>USERNAME:</label><br />
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <label>EMAIL:</label><br />
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div style={{ marginTop: 10 }}>
-            <label>PASSWORD:</label><br />
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit" style={{ marginTop: 15 }}>
-            {isRegister ? 'REGISTER' : 'LOGIN'}
-          </button>
-        </form>
-        <button
-          onClick={() => setIsRegister(!isRegister)}
-          style={{ marginTop: 10, background: 'none', border: 'none', color: '#00ff66', cursor: 'pointer' }}
-        >
-          {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрироваться'}
-        </button>
-      </div>
+      <div style={{ 
+  padding: 24, 
+  color: '#e4e4e7', 
+  backgroundColor: '#0d0d12', 
+  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+  borderRadius: 12
+}}>
+  <h2 style={{ 
+    fontSize: 15, 
+    fontWeight: 600, 
+    color: '#f4f4f5', 
+    margin: '0 0 20px 0',
+    borderBottom: '1px solid #1f1f27',
+    paddingBottom: 14
+  }}>
+    Threadline// AUTH
+  </h2>
+  {error && (
+    <div style={{ 
+      color: '#f87171', 
+      background: 'rgba(248, 113, 113, 0.08)',
+      border: '1px solid #3f1f24',
+      borderRadius: 8,
+      padding: '8px 10px',
+      fontSize: 12,
+      marginBottom: 12
+    }}>
+      {error}
+    </div>
+  )}
+  <form onSubmit={handleAuth}>
+    <div style={{ marginBottom: 12 }}>
+      <label style={{ fontSize: 11, color: '#71717a', letterSpacing: 0.5, textTransform: 'uppercase' }}>
+        USERNAME:
+      </label><br />
+      <input
+        type="text"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
+        style={{
+          width: '100%',
+          padding: '10px 12px',
+          marginTop: 6,
+          background: '#16161d',
+          border: '1px solid #26262f',
+          borderRadius: 8,
+          color: '#e4e4e7',
+          fontSize: 13,
+          outline: 'none',
+          boxSizing: 'border-box'
+        }}
+      />
+    </div>
+    <div style={{ marginBottom: 12 }}>
+      <label style={{ fontSize: 11, color: '#71717a', letterSpacing: 0.5, textTransform: 'uppercase' }}>
+        EMAIL:
+      </label><br />
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        style={{
+          width: '100%',
+          padding: '10px 12px',
+          marginTop: 6,
+          background: '#16161d',
+          border: '1px solid #26262f',
+          borderRadius: 8,
+          color: '#e4e4e7',
+          fontSize: 13,
+          outline: 'none',
+          boxSizing: 'border-box'
+        }}
+      />
+    </div>
+    <div style={{ marginBottom: 12 }}>
+      <label style={{ fontSize: 11, color: '#71717a', letterSpacing: 0.5, textTransform: 'uppercase' }}>
+        PASSWORD:
+      </label><br />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        style={{
+          width: '100%',
+          padding: '10px 12px',
+          marginTop: 6,
+          background: '#16161d',
+          border: '1px solid #26262f',
+          borderRadius: 8,
+          color: '#e4e4e7',
+          fontSize: 13,
+          outline: 'none',
+          boxSizing: 'border-box'
+        }}
+      />
+    </div>
+    <button 
+      type="submit" 
+      style={{ 
+        marginTop: 8,
+        width: '100%',
+        padding: '11px 12px',
+        background: '#6366f1',
+        border: '1px solid #6366f1',
+        borderRadius: 8,
+        color: '#ffffff',
+        fontWeight: 600,
+        fontSize: 13,
+        cursor: 'pointer'
+      }}
+    >
+      {isRegister ? 'REGISTER' : 'LOGIN'}
+    </button>
+  </form>
+  <button
+    onClick={() => setIsRegister(!isRegister)}
+    style={{ 
+      marginTop: 14, 
+      background: 'none', 
+      border: 'none', 
+      color: '#a5b4fc', 
+      cursor: 'pointer',
+      fontSize: 12,
+      padding: 0,
+      width: 'auto'
+    }}
+  >
+    {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрироваться'}
+  </button>
+</div>
     );
   }
 
@@ -193,42 +279,8 @@ useEffect(() => {
 //   loadClues();
 // }, []);
 
-const getCaseData = async (caseId: string) => {
-  // NEW: показываем LOADING пока идёт запрос, а не пустую панель
-  setJsonLoading(true);
-  try {
-    const response = await fetch(
-      `${API_URL}/cases/${caseId}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
 
-    const data: CaseData = await response.json();
 
-    setSelectedCase(data);
-
-    console.log('FRONTEND CASE:', data);
-    console.log('FRONTEND CLUES:', data.clues);
-  } catch (err) {
-    showStatus('ERR_CASE_DATA_FAILED', '#ff3366');
-  } finally {
-    setJsonLoading(false);
-  }
-};
-useEffect(() => {
-  if (!selectedCaseId) return;
-
-  getCaseData(selectedCaseId);
-}, [selectedCaseId]);
-// NEW: убран дублирующий useEffect, который отдельно от loadCases() пытался
-// выставить selectedCaseId — это создавало лишний ре-рендер и задержку
-// перед тем как JSON-панель начинала подгружать данные.
-
-  // Находим текущий выбранный объект кейса
   const activeCase = cases.find((c) => c.id === selectedCaseId);
 
   // --- 2. Создание нового кейса (POST /cases) ---
@@ -355,7 +407,7 @@ Authorization: `Bearer ${token}`,
       if (res.ok) {
         showStatus('DUMP_SUCCESSFUL', '#00ff66');
         await loadCases(); // Обновляем список, чтобы улика сразу появилась
-        await getCaseData(selectedCaseId); // NEW: обновляем JSON-панель [04] в реальном времени
+       
         // await loadClues()
       } else {
         const errorData = await res.json();
@@ -384,7 +436,7 @@ Authorization: `Bearer ${token}`,
       if (res.ok) {
         showStatus('CLUE_DELETED_SUCCESSFULLY', '#00ff66');
         await loadCases(); // Обновляем список кейсов
-        await getCaseData(selectedCaseId); // NEW: обновляем JSON-панель [04] в реальном времени
+     
       } else {
         const errorData = await res.json();
         showStatus(`ERR: ${errorData.message || 'DELETE_FAILED'}`, '#ff3366');
@@ -451,125 +503,44 @@ Authorization: `Bearer ${token}`,
 
   return (
    <div className="ghost-collector">
-      <h2>GHOST_COLLECTOR</h2>
+      <h2>Threadline</h2>
 
       <div className="section section-header">
         <button onClick={handleLogout}>LOGOUT</button>
       </div>
       <div className="beetwener">
 <div className="paySection">
-  <h3>[04] GET_DATA_IN_JSON</h3>
-<select
-  value={selectedCaseId}
-  onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-    setSelectedCaseId(e.target.value);
-  }}
->
-  {cases.length === 0 ? (
-    <option value="">NO_CASES_FOUND</option>
-  ) : (
-    cases.map((c) => (
-      <option key={c.id} value={c.id}>
-        {c.title}
-      </option>
-    ))
-  )}
-</select>
-<ul
-  style={{
-    padding: 0,
-    margin: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '8px',
-  }}
->
-  {jsonLoading ? (
-    // NEW: показываем явный статус загрузки, а не пустую панель
-    <li
-      style={{
-        listStyle: 'none',
-        color: '#4a5a6a',
-        padding: '10px',
-        textAlign: 'center',
-        fontSize: '14px',
-      }}
-    >
-      LOADING_CASE_DATA...
-    </li>
-  ) : !selectedCase?.clues || selectedCase.clues.length === 0 ? (
-    <li
-      style={{
-        listStyle: 'none',
-        color: '#666',
-        padding: '10px',
-        textAlign: 'center',
-        fontSize: '14px',
-      }}
-    >
-      NO_CLUES_FOUND
-    </li>
-  ) : (
-    selectedCase.clues.map((clue) => (
-      <li key={clue.id}>
-        <pre>
-          {JSON.stringify(clue, null, 2)}
-        </pre>
-      </li>
-    ))
-  )}
-</ul>
+  <h3>[04] GET_STATS</h3>
+<p>
+  {cases.map((c, id) => (
+    <div style={{display:'flex', flexDirection:'column', gap: '10px'}}>
+      <span key={id}>
+      {new Date(c.createdAt).toLocaleString('ru-RU')}
+    </span>
+            <span>
+        {c.clues?.length 
+          ? `Улик: ${c.clues.length}` 
+          : 'Улик нет'}
+      </span>
+      <span>
+        {c.tags?.length 
+          ? `Тегов: ${c.tags.length}` 
+          : 'Тегов нет'}
+      </span>
+    </div>
+    
+  ))}
+</p>
 
- 
-  
-</div>
 
-<div className="mainSection">
-      <div className="section">
-        <h3>[01] SELECT_ACTIVE_CASE</h3>
-        <select value={selectedCaseId} onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedCaseId(e.target.value)}>
-          {cases.length === 0 ? <option value="">NO_CASES_FOUND</option> : cases.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
-        </select>
 
-        {activeCase && (
-          <div>
-            <h4>TAGS:</h4>
-            <div className="tags">
-              {activeCase?.tags?.map(tag => (
-                <span className="tag" key={tag}>
-                  #{tag}
-                  <button className="deleteButton" onClick={() => deleteTag(selectedCaseId, tag)}>🗑️</button>
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        <input type="text" placeholder="NEW_CASE_NAME..." value={newCaseTitle} onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCaseTitle(e.target.value)} />
-        <input type="text" placeholder="NEW_CASE_TAG..." value={caseTag} onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCaseTag(e.target.value)} />
-        <button id="actionBtn" onClick={handleCreateCase}>INITIALIZE_CASE</button>
-        <button onClick={() => handleAddTag(selectedCaseId, caseTag)}>ADD TAG</button>
-      </div>
-
-      {/* 🔥 ИЗМЕНЕННАЯ СЕКЦИЯ 2 — КНОПКИ В РЯД */}
-      <div className="section">
-        <h3>[02] DATA_CAPTURE</h3>
-        <div className="capture-buttons">
-          <button onClick={handleDumpCurrentTab}>DUMP_TAB</button>
-          
-        </div>
-        {status.msg && <div id="status" style={{ color: status.color, marginTop: '8px' }}>{status.msg}</div>}
-      </div>
-
-      {/* 🔥 ИЗМЕНЕННАЯ СЕКЦИЯ 3 — КЛИКАБЕЛЬНЫЕ СКРИНШОТЫ */}
-      <div className="section">
-       <h3>[03] CAPTURED_CLUES_LOG</h3>
+<h3>[05] GET_CLUES</h3>
 <ul style={{ 
   padding: 0,
   margin: 0,
   display: 'flex',
   flexDirection: 'column',
-  gap: '8px'
+  gap: '0px'
 }}>
   {!activeCase || !activeCase.clues || activeCase.clues.length === 0 ? (
     <li style={{ 
@@ -582,14 +553,56 @@ Authorization: `Bearer ${token}`,
       Нет улик
     </li>
   ) : (
-    activeCase.clues.map((clue, idx) => {
+    [...activeCase.clues]
+      .sort((a, b) => new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime())
+      .map((clue, idx, sortedArr) => {
       const isScreenshot = clue.url && clue.url.startsWith('data:');
+      const isLast = idx === sortedArr.length - 1;
       return (
         <li key={clue.id || idx} style={{ 
           listStyle: 'none',
-          padding: '6px 0',
-          borderBottom: '1px solid rgba(255,255,255,0.05)'
+          padding: '6px 0 20px 0',
+          position: 'relative',
+          paddingLeft: '24px'
         }}>
+          {/* NEW: точка графа */}
+          <div style={{
+            position: 'absolute',
+            left: '0px',
+            top: '4px',
+            width: '11px',
+            height: '11px',
+            borderRadius: '50%',
+            background: '#00ff66',
+            boxShadow: '0 0 6px #00ff66',
+            zIndex: 2
+          }} />
+
+          {/* NEW: соединяющая линия вниз (кроме последнего элемента) */}
+          {!isLast && (
+            <div style={{
+              position: 'absolute',
+              left: '5px',
+              top: '15px',
+              bottom: '-14px',
+              width: '1px',
+              background: '#00ff66',
+              zIndex: 1
+            }} />
+          )}
+
+          {/* NEW: дата создания */}
+          {clue.createdAt && (
+            <div style={{
+              fontSize: '9px',
+              color: '#4a5a6a',
+              marginBottom: '4px',
+              letterSpacing: '0.5px'
+            }}>
+              {new Date(clue.createdAt).toLocaleString('ru-RU')}
+            </div>
+          )}
+
           {isScreenshot ? (
             <div style={{ marginBottom: '4px' }}>
               <img
@@ -635,9 +648,9 @@ Authorization: `Bearer ${token}`,
             
               🔗 {clue.title || clue.url}
             </a>
+            
           )}
-
-          <button
+            <button
             className='deleteButton'
             onClick={() => clue.id && deleteClue(clue.id)}
             style={{
@@ -653,12 +666,58 @@ Authorization: `Bearer ${token}`,
           >
             🗑️ 
           </button>
+
+        
         </li>
       );
     })
   )}
 </ul>
+
+
+
+ 
+  
+</div>
+
+<div className="mainSection">
+      <div className="section">
+        <h3>[01] SELECT_ACTIVE_CASE</h3>
+        <select value={selectedCaseId} onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedCaseId(e.target.value)}>
+          {cases.length === 0 ? <option value="">NO_CASES_FOUND</option> : cases.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
+        </select>
+
+        {activeCase && (
+          <div>
+            <h4>TAGS:</h4>
+            <div className="tags">
+              {activeCase?.tags?.map(tag => (
+                <span className="tag" key={tag}>
+                  #{tag}
+                  <button className="deleteButton" onClick={() => deleteTag(selectedCaseId, tag)}>🗑️</button>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <input type="text" placeholder="NEW_CASE_NAME..." value={newCaseTitle} onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCaseTitle(e.target.value)} />
+        <input type="text" placeholder="NEW_CASE_TAG..." value={caseTag} onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCaseTag(e.target.value)} />
+        <button id="actionBtn" onClick={handleCreateCase}>INITIALIZE_CASE</button>
+        <button onClick={() => handleAddTag(selectedCaseId, caseTag)}>ADD TAG</button>
       </div>
+
+      {/* 🔥 ИЗМЕНЕННАЯ СЕКЦИЯ 2 — КНОПКИ В РЯД */}
+      <div className="section">
+        <h3>[02] DATA_CAPTURE</h3>
+        <div className="capture-buttons">
+          <button onClick={handleDumpCurrentTab}>DUMP_TAB</button>
+          
+        </div>
+        {status.msg && <div id="status" style={{ color: status.color, marginTop: '8px' }}>{status.msg}</div>}
+      </div>
+
+
       </div>
       </div>
     </div>

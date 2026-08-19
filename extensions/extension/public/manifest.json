@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "GHOST_COLLECTOR",
+  "name": "Threadline",
   "version": "1.0",
-  "description": "A simple Chrome extension",
+  "description": "Сохраняй важные страницы по папкам с тегами и хронологией — без потерянных вкладок",
 
   "permissions": [
     "storage",
@@ -32,6 +32,6 @@
   ],
 
   "icons": {
-    "128": "icons/ghost_collector_logo.png"
+    "128": "icons/threadline.png"
   }
 }

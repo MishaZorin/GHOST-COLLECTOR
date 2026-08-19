@@ -2,9 +2,9 @@
 body { 
     width: 600px; 
     padding: 20px; 
-    font-family: 'Courier New', Courier, monospace; 
-    background-color: #080a0c;
-    color: #00ff66; 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+    background-color: #0d0d12;
+    color: #e4e4e7; 
     margin: 0;
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
@@ -15,49 +15,51 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: #080a0c;
+    background: #0d0d12;
 }
 ::-webkit-scrollbar-thumb {
-    background: #1a242d;
+    background: #2a2a35;
+    border-radius: 4px;
 }
 
 /* --- ШАПКА И СЕКЦИИ --- */
 h2 { 
-    font-size: 13px; 
-    font-weight: 900;
-    text-transform: uppercase; 
-    letter-spacing: 3px; 
+    font-size: 15px; 
+    font-weight: 600;
+    letter-spacing: -0.2px; 
     margin: 0 0 20px 0;
-    color: #00ff66;
-    border-bottom: 1px solid #1a242d;
-    padding-bottom: 10px;
+    color: #f4f4f5;
+    border-bottom: 1px solid #1f1f27;
+    padding-bottom: 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 h3 { 
-    margin: 0 0 10px 0; 
-    font-size: 10px; 
+    margin: 0 0 12px 0; 
+    font-size: 11px; 
     text-transform: uppercase; 
-    letter-spacing: 1.5px;
-    color: #4a5a6a;
+    letter-spacing: 0.8px;
+    color: #71717a;
+    font-weight: 600;
 }
 
 h4 {
-    margin: 10px 0 6px 0;
-    font-size: 10px;
-    color: #4a5a6a;
-    letter-spacing: 1px;
+    margin: 12px 0 6px 0;
+    font-size: 11px;
+    color: #71717a;
+    letter-spacing: 0.5px;
+    font-weight: 600;
 }
 
 .section { 
-    margin-bottom: 20px; 
-    padding-bottom: 15px; 
-    border-bottom: 1px dashed #1a242d; 
+    margin-bottom: 22px; 
+    padding-bottom: 16px; 
+    border-bottom: 1px solid #1a1a22; 
 }
 
 .section:last-of-type {
@@ -68,18 +70,24 @@ h4 {
 
 .section-header {
     border-bottom: none;
-    margin-bottom: 15px;
+    margin-bottom: 16px;
     padding-bottom: 0;
     display: flex;
     justify-content: flex-end;
 }
 .section-header button {
     width: auto;
-    font-size: 9px;
-    padding: 4px 8px;
-    color: #ff3366;
-    border-color: #ff3366;
+    font-size: 11px;
+    padding: 6px 12px;
+    color: #f87171;
+    border: 1px solid #3f1f24;
+    background-color: #1a1013;
     float: none;
+}
+.section-header button:hover {
+    background: #f87171 !important;
+    color: #0d0d12 !important;
+    border-color: #f87171;
 }
 
 /* --- ИНПУТЫ И КНОПКИ --- */
@@ -87,47 +95,56 @@ input, select, button {
     width: 100%; 
     padding: 10px 12px; 
     margin-top: 8px; 
-    background-color: #0d1216;
-    border: 1px solid #1a242d;
-    color: #00ff66;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 11px;
-    border-radius: 0px; 
+    background-color: #16161d;
+    border: 1px solid #26262f;
+    color: #e4e4e7;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 13px;
+    border-radius: 8px; 
     outline: none;
     transition: all 0.15s ease;
 }
 
 input::placeholder {
-    color: #2a3a4a;
+    color: #52525b;
 }
 
 input:focus, select:focus {
-    background-color: #12181e;
-    border-color: #00ff66;
+    background-color: #1a1a22;
+    border-color: #818cf8;
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
 }
 
 select option {
-    background: #0d1216;
-    color: #00ff66;
+    background: #16161d;
+    color: #e4e4e7;
 }
 
 button { 
     cursor: pointer; 
-    background: #0d1216; 
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    background: #16161d; 
+    font-weight: 500;
+    color: #d4d4d8;
+    letter-spacing: 0.2px;
+    border-color: #26262f;
 }
 
 #actionBtn {
-    border-color: #00ff66;
-    background-color: rgba(0, 255, 102, 0.03);
+    border-color: #6366f1;
+    background-color: #6366f1;
+    color: #ffffff;
+    font-weight: 600;
+}
+#actionBtn:hover {
+    background: #4f46e5 !important;
+    color: #ffffff !important;
+    border-color: #4f46e5;
 }
 
 button:hover { 
-    background: #00ff66 !important; 
-    color: #080a0c !important; 
-    border-color: #00ff66;
+    background: #1f1f27 !important; 
+    color: #f4f4f5 !important; 
+    border-color: #34343f;
 }
 
 /* --- ТЕГИ (TAGS) --- */
@@ -135,18 +152,20 @@ button:hover {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin: 8px 0 14px 0;
+    margin: 10px 0 16px 0;
 }
 
 .tag {
     display: inline-flex;
     align-items: center;
-    padding: 4px 6px 4px 8px;
-    border: 1px solid #1a242d;
-    color: #8899a6;
-    background: #0d1216;
-    font-size: 10px;
-    letter-spacing: 0.5px;
+    padding: 5px 8px 5px 10px;
+    border: 1px solid #26262f;
+    border-radius: 999px;
+    color: #a5b4fc;
+    background: rgba(99, 102, 241, 0.1);
+    font-size: 11px;
+    letter-spacing: 0.2px;
+    font-weight: 500;
 }
 
 .tag .deleteButton {
@@ -156,13 +175,13 @@ button:hover {
     padding: 0;
     background: transparent !important;
     border: none;
-    color: #ff3366 !important;
-    font-size: 10px;
+    color: #71717a !important;
+    font-size: 11px;
     display: inline-block;
     box-shadow: none;
 }
 .tag .deleteButton:hover {
-    color: #fff !important;
+    color: #f87171 !important;
     transform: scale(1.1);
 }
 
@@ -173,14 +192,15 @@ ul {
     margin: 8px 0 0 0; 
     max-height: 180px; 
     overflow-y: auto; 
-    border: 1px solid #1a242d;
-    background-color: #0d1216;
+    border: 1px solid #1f1f27;
+    border-radius: 10px;
+    background-color: #16161d;
 }
 
 li { 
-    padding: 8px 12px; 
-    border-bottom: 1px solid #1a242d; 
-    font-size: 11px; 
+    padding: 10px 12px; 
+    border-bottom: 1px solid #1a1a22; 
+    font-size: 13px; 
     word-break: break-all;
     display: flex;
     align-items: center;
@@ -192,14 +212,12 @@ li:last-child {
 }
         
 li::before {
-    content: "»";
-    color: #4a5a6a;
-    margin-right: 8px;
-    flex-shrink: 0;
+    content: "";
+    margin-right: 0;
 }
 
 li a { 
-    color: #00ff66;
+    color: #a5b4fc;
     text-decoration: none; 
     flex-grow: 1;
     white-space: nowrap;
@@ -209,19 +227,20 @@ li a {
 }
         
 li a:hover {
-    color: #ffffff;
+    color: #c7d2fe;
     text-decoration: underline;
 }
 
 li .deleteButton {
-    width: 20px;                   
-    height: 20px;
+    width: 24px;                   
+    height: 24px;
     padding: 0;
     margin: 0;
     background-color: transparent;
-    border: 1px solid #1a242d;
-    color: #ff3366;
-    font-size: 10px;
+    border: 1px solid #1f1f27;
+    border-radius: 6px;
+    color: #f87171;
+    font-size: 11px;
     display: flex;
     align-items: center;
     justify-content: center;       
@@ -230,21 +249,22 @@ li .deleteButton {
 }
 
 li .deleteButton:hover {
-    background: #ff3366 !important;
-    color: #080a0c !important;
-    border-color: #ff3366;
+    background: rgba(248, 113, 113, 0.1) !important;
+    color: #f87171 !important;
+    border-color: #3f1f24;
 }
 
 /* --- СТАТУСЫ И ОШИБКИ --- */
 #status { 
-    font-size: 10px; 
-    margin-top: 10px; 
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 6px;
+    font-size: 11px; 
+    margin-top: 12px; 
+    letter-spacing: 0.2px;
+    padding: 9px;
+    border-radius: 8px;
     border: 1px solid currentColor;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 0.02);
     text-align: center;
+    font-weight: 500;
 }
 .capture-buttons {
     display: flex;
@@ -260,19 +280,18 @@ li .deleteButton:hover {
 }
 
 #screenshotBtn {
-    border-color: #00ccff;
-    color: #00ccff;
-    background-color: rgba(0, 204, 255, 0.03);
+    border-color: #38bdf8;
+    color: #38bdf8;
+    background-color: rgba(56, 189, 248, 0.08);
 }
 
 #screenshotBtn:hover {
-    background: #00ccff !important;
-    color: #080a0c !important;
-    border-color: #00ccff;
-    box-shadow: 0 0 8px #00ccff;
+    background: #38bdf8 !important;
+    color: #0d0d12 !important;
+    border-color: #38bdf8;
 }
 
-/* --- ДВУХКОЛОНОЧНЫЙ LAYOUT (JSON слева / основные секции справа) --- */
+/* --- ДВУХКОЛОНОЧНЫЙ LAYOUT --- */
 .beetwener {
     display: flex;
     justify-content: space-between;
@@ -280,7 +299,6 @@ li .deleteButton:hover {
     align-items: flex-start;
 }
 
-/* FIX: было 110px — слишком узко для JSON-данных, расширил */
 .paySection {
     flex: 0 0 260px;
     min-width: 0;
@@ -291,14 +309,31 @@ li .deleteButton:hover {
     min-width: 0;
 }
 
-/* FIX: JSON-список внутри paySection — нужен свой стиль, а не наследование от li с ссылками */
+/* --- СТАТИСТИКА КЕЙСА [04] GET_STATS --- */
+.paySection p {
+    margin: 0 0 16px 0;
+    padding: 12px;
+    background: #16161d;
+    border: 1px solid #1f1f27;
+    border-radius: 10px;
+    font-size: 11px;
+    color: #a1a1aa;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* --- СПИСОК УЛИК С ГРАФОМ [05] GET_CLUES --- */
 .paySection ul {
     max-height: 280px;
+    border: none;
+    background: transparent;
 }
 
 .paySection li {
     display: block;
-    padding: 8px 10px;
+    padding: 6px 0 20px 0;
+    border-bottom: none;
 }
 
 .paySection li::before {
@@ -310,11 +345,8 @@ li .deleteButton:hover {
     padding: 0;
     font-size: 10px;
     line-height: 1.5;
-    color: #8899a6;
+    color: #a1a1aa;
     white-space: pre-wrap;
     word-break: break-all;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'SF Mono', Monaco, monospace;
 }
-
-/* --- IOC SCAN --- */
-/*
