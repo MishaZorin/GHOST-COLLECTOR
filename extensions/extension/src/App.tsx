@@ -224,7 +224,7 @@ function App() {
       width: 'auto'
     }}
   >
-    {isRegister ? 'Уже есть аккаунт? Войти' : 'Нет аккаунта? Зарегистрироваться'}
+    {isRegister ? 'Already have an account? Log in!' : 'No account? Register!'}
   </button>
 </div>
     );
@@ -515,17 +515,17 @@ Authorization: `Bearer ${token}`,
   {cases.map((c, id) => (
     <div style={{display:'flex', flexDirection:'column', gap: '10px'}}>
       <span key={id}>
-      {new Date(c.createdAt).toLocaleString('ru-RU')}
+      CREATED_AT:{new Date(c.createdAt).toLocaleString('ru-RU')}
     </span>
             <span>
         {c.clues?.length 
-          ? `Улик: ${c.clues.length}` 
-          : 'Улик нет'}
+          ? `SOURCES: ${c.clues.length}` 
+          : 'NO_SOURCES'}
       </span>
       <span>
         {c.tags?.length 
-          ? `Тегов: ${c.tags.length}` 
-          : 'Тегов нет'}
+          ? `TAGS: ${c.tags.length}` 
+          : 'NO_TAGS'}
       </span>
     </div>
     
@@ -534,7 +534,7 @@ Authorization: `Bearer ${token}`,
 
 
 
-<h3>[05] GET_CLUES</h3>
+<h3>[05] GET_SOURCES</h3>
 <ul style={{ 
   padding: 0,
   margin: 0,
@@ -550,7 +550,7 @@ Authorization: `Bearer ${token}`,
       textAlign: 'center',
       fontSize: '14px'
     }}>
-      Нет улик
+      NO_SOURCES
     </li>
   ) : (
     [...activeCase.clues]
@@ -573,8 +573,8 @@ Authorization: `Bearer ${token}`,
             width: '11px',
             height: '11px',
             borderRadius: '50%',
-            background: '#00ff66',
-            boxShadow: '0 0 6px #00ff66',
+            background: '#6366f1',
+            boxShadow: '0 0 6px #6366f1',
             zIndex: 2
           }} />
 
@@ -586,7 +586,7 @@ Authorization: `Bearer ${token}`,
               top: '15px',
               bottom: '-14px',
               width: '1px',
-              background: '#00ff66',
+              background: '#6366f1',
               zIndex: 1
             }} />
           )}
@@ -682,9 +682,9 @@ Authorization: `Bearer ${token}`,
 
 <div className="mainSection">
       <div className="section">
-        <h3>[01] SELECT_ACTIVE_CASE</h3>
+        <h3>[01] SELECT_ACTIVE_FOLDER</h3>
         <select value={selectedCaseId} onChange={(e: ChangeEvent<HTMLSelectElement>) => setSelectedCaseId(e.target.value)}>
-          {cases.length === 0 ? <option value="">NO_CASES_FOUND</option> : cases.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
+          {cases.length === 0 ? <option value="">NO_FOLDER_FOUND</option> : cases.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
         </select>
 
         {activeCase && (
@@ -701,10 +701,10 @@ Authorization: `Bearer ${token}`,
           </div>
         )}
 
-        <input type="text" placeholder="NEW_CASE_NAME..." value={newCaseTitle} onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCaseTitle(e.target.value)} />
-        <input type="text" placeholder="NEW_CASE_TAG..." value={caseTag} onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCaseTag(e.target.value)} />
-        <button id="actionBtn" onClick={handleCreateCase}>INITIALIZE_CASE</button>
-        <button onClick={() => handleAddTag(selectedCaseId, caseTag)}>ADD TAG</button>
+        <input type="text" placeholder="NEW_FOLDER_NAME..." value={newCaseTitle} onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCaseTitle(e.target.value)} />
+        <input type="text" placeholder="NEW_FOLDER_TAG..." value={caseTag} onChange={(e: ChangeEvent<HTMLInputElement>) => setNewCaseTag(e.target.value)} />
+        <button id="actionBtn" onClick={handleCreateCase}>INITIALIZE_FOLDER</button>
+        <button onClick={() => handleAddTag(selectedCaseId, caseTag)}>ADD_TAG</button>
       </div>
 
       {/* 🔥 ИЗМЕНЕННАЯ СЕКЦИЯ 2 — КНОПКИ В РЯД */}
