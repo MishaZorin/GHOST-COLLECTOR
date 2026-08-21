@@ -24,7 +24,7 @@ interface StatusState {
   color: string;
 }
 
-const API_URL = 'http://10.133.100.100';
+const API_URL = 'https://188.242.124.186';
 // const API_URL = 'http://localhost:3000';
 
 function App() {
