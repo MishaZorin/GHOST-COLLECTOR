@@ -4,14 +4,14 @@ import { resolve } from "path";
 
 export default defineConfig({
   plugins: [react()],
+  base: "./", // Автоматически добавляет точку перед слэшем для всех путей в dist/index.html
   build: {
     rollupOptions: {
       input: {
-        popup: resolve(__dirname, "index.html"),
-        background: resolve(__dirname, "src/background.ts"),
+        popup: resolve(__dirname, "index.html"), // Собирает только ваше popup-приложение
       },
       output: {
-        entryFileNames: "[name].js",
+        entryFileNames: "[name].js", // Файл на выходе гарантированно будет называться popup.js
       },
     },
   },

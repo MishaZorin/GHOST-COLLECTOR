@@ -3,34 +3,13 @@
   "name": "Threadline",
   "version": "1.0",
   "description": "Сохраняй важные страницы по папкам с тегами и хронологией — без потерянных вкладок",
-
   "permissions": [
     "storage",
-    "tabs",
-    "activeTab",
-    "scripting"
+    "activeTab"
   ],
-
-  "host_permissions": [
-    "<all_urls>"
-  ],
-
-  "background": {
-    "service_worker": "background.js",
-    "type": "module"
-  },
-
   "action": {
     "default_popup": "index.html"
   },
-
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
-    }
-  ],
-
   "icons": {
     "128": "icons/threadline.png"
   }
