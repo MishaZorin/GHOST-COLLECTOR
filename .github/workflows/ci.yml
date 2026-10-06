@@ -74,5 +74,6 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: ./extensions/extension
+          file: ./extensions/Dockerfile
           push: true
           tags: ghcr.io/mishazorin/threadline-frontend:latest
