@@ -77,3 +77,4 @@ jobs:
           file: ./extensions/Dockerfile
           push: true
           tags: ghcr.io/mishazorin/threadline-frontend:latest
+
