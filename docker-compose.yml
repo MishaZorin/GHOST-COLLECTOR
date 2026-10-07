@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # 1. СЕРВИС БАЗЫ ДАННЫХ (Ваш оригинал)
   postgres:
     image: postgres:15-alpine
     container_name: ghost_collector_db
@@ -13,6 +14,30 @@ services:
       - "5439:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  # 2. СЕРВИС БЭКЕНДА (Подтягивается с GitHub)
+  backend:
+    image: ghcr.io/mishazorin/threadline-backend:latest
+    container_name: ghost_collector_backend
+    restart: always
+    ports:
+      - "8080:8080" # Открываем бэкенд наружу на порту 8080
+    environment:
+      # Магия Docker: вместо localhost или IP сервера пишем имя сервиса базы данных — postgres!
+      # И используем внутренний порт базы (5432), а не внешний (5439)
+      DATABASE_URL: "postgresql://ghost_operator:top_secret_password_2026@postgres:5432/ghost_clues_db"
+    depends_on:
+      - postgres # Бэкенд не запустится, пока не поднимется база данных
+
+  # 3. СЕРВИС ФРОНТЕНДА (Подтягивается с GitHub)
+  frontend:
+    image: ghcr.io/mishazorin/threadline-frontend:latest
+    container_name: ghost_collector_frontend
+    restart: always
+    ports:
+      - "80:80" # Фронтенд будет доступен всему миру по обычному HTTP (порт 80)
+    depends_on:
+      - backend # Фронтенд подождет запуска бэкенда
 
 volumes:
   pgdata:
