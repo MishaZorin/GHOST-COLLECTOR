@@ -1,50 +1,47 @@
-```yaml
+
+name: Threadline CD
+
 on:
   workflow_run:
-    workflows: ["Threadline CI"]
+    workflows:
+      - "Threadline CI"
     types:
       - completed
 
-
 jobs:
-
   deploy:
-    # Запускаем deploy только если Threadline CI завершился успешно
+    # Запускаем деплой только если CI успешно завершился
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
-    # GitHub запускает этот job на своей виртуальной машине
+    # GitHub запускает эту задачу на своей машине
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Deploy to VPS
-        # GitHub Action, который подключается к VPS по SSH
+        # Подключаемся к VPS по SSH
         uses: appleboy/ssh-action@v1.2.2
 
         with:
-          # IP-адрес VPS из GitHub Secrets
+          # IP-адрес VPS
           host: ${{ secrets.VPS_HOST }}
 
-          # Пользователь VPS из GitHub Secrets
+          # Пользователь VPS
           username: ${{ secrets.VPS_USER }}
 
-          # Приватный SSH-ключ из GitHub Secrets
+          # Приватный SSH-ключ
           key: ${{ secrets.VPS_SSH_KEY }}
 
-  
+          # На твоём VPS SSH работает на 6767, а не на 22
           port: 6767
 
           script: |
-
-            # Переходим в папку приложения
+        
             cd /var/www/second-app
 
-            # Забираем последние изменения из Git
+         
             git pull origin master
 
-            # Скачиваем новые Docker images
             docker compose -f docker-compose.prod.yml pull
 
-            # Перезапускаем контейнеры
+          
             docker compose -f docker-compose.prod.yml up -d
-```
