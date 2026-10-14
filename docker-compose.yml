@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # 1. СЕРВИС БАЗЫ ДАННЫХ (Ваш оригинал)
+  # 1. СЕРВИС БАЗЫ ДАННЫХ
   postgres:
     image: postgres:15-alpine
     container_name: ghost_collector_db
@@ -11,33 +11,31 @@ services:
       POSTGRES_PASSWORD: top_secret_password_2026
       POSTGRES_DB: ghost_clues_db
     ports:
-      - "5439:5432"
+      - "5439:5432" # Снаружи к базе можно подключиться через 188.242.124.186:5439
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  # 2. СЕРВИС БЭКЕНДА (Подтягивается с GitHub)
+  # 2. СЕРВИС БЭКЕНДА
   backend:
     image: ghcr.io/mishazorin/threadline-backend:latest
     container_name: ghost_collector_backend
     restart: always
     ports:
-      - "8080:8080" # Открываем бэкенд наружу на порту 8080
-    environment:
-      # Магия Docker: вместо localhost или IP сервера пишем имя сервиса базы данных — postgres!
-      # И используем внутренний порт базы (5432), а не внешний (5439)
-      DATABASE_URL: "postgresql://ghost_operator:top_secret_password_2026@postgres:5432/ghost_clues_db"
+      - "8080:8080"
+    env_file:
+      - .env # Автоматически подтянет DATABASE_URL и JWT_SECRET из файла .env
     depends_on:
-      - postgres # Бэкенд не запустится, пока не поднимется база данных
+      - postgres
 
-  # 3. СЕРВИС ФРОНТЕНДА (Подтягивается с GitHub)
+  # 3. СЕРВИС ФРОНТЕНДА
   frontend:
     image: ghcr.io/mishazorin/threadline-frontend:latest
     container_name: ghost_collector_frontend
     restart: always
     ports:
-      - "80:80" # Фронтенд будет доступен всему миру по обычному HTTP (порт 80)
+      - "8081:80" # Изменено на 8081, так как 80 порт занят системным Nginx
     depends_on:
-      - backend # Фронтенд подождет запуска бэкенда
+      - backend
 
 volumes:
   pgdata:
