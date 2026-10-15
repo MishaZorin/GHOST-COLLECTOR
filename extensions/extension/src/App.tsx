@@ -24,7 +24,8 @@ interface StatusState {
   color: string;
 }
 // cd work!
-const API_URL = '/api';
+const API_URL = 'http://188.242.124';
+
 // const API_URL = 'http://localhost:3000';
 
 function App() {
